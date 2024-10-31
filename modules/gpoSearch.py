@@ -44,8 +44,11 @@ def gpoSearch():
 
         # Convert GPO data to DataFrame for easier handling
         df = pd.DataFrame(gpo_data)
-        print(df.to_string())
+        # print(df.apply(lambda row: str(row["gPCFileSysPath"]), axis=1))
+        for ind in df.index:
+            print(df['gPCFileSysPath'][ind])
     else:
         print("No GPOs linked to this OU.")
+
 
 sys.modules[__name__] = gpoSearch
