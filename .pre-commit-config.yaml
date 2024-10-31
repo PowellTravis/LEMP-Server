@@ -3,6 +3,8 @@ repos:
     hooks:
       - id: update-requirements
         name: Update requirements.txt
-        entry: bash -c 'source ./bin/activate && pip freeze > requirements.txt'
+        entry: bash -c 'source ./bin/activate && pip freeze > requirements.txt && git add requirements.txt'
         language: system
         files: ^requirements\.txt$
+        stages: [pre-commit]
+        always_run: true
