@@ -23,7 +23,6 @@ def computers():
 
     # Load data into a DataFrame
     df = pd.DataFrame(data)
-    print(data)
-    print(df)
+    return df
 
 sys.modules[__name__] = computers
