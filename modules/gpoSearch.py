@@ -44,7 +44,7 @@ def gpoSearch():
 
         # Convert GPO data to DataFrame for easier handling
         df = pd.DataFrame(gpo_data)
-        print(df)
+        print(df.to_string())
     else:
         print("No GPOs linked to this OU.")
 
