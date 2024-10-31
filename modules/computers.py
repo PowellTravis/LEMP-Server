@@ -1,4 +1,4 @@
-from ldap3 import Server, Connection, ALL
+from ldap3 import Server, Connection, ALL, ALL_ATTRIBUTES
 import pandas as pd
 from dotenv import load_dotenv
 import os
@@ -13,7 +13,7 @@ def computers():
 
     server = Server('ldap://powellnetworks.net', get_info=ALL)
     conn = Connection(server, user, password, auto_bind=True)
-    conn.search(search, '(&(objectClass=computer)(operatingSystem=pc-linux-gnu))', attributes=['dNSHostName', 'name'])
+    conn.search(search, '(&(objectClass=computer)(operatingSystem=pc-linux-gnu))', attributes=ALL_ATTRIBUTES)
 
     # Extract attributes for each entry
     data = []
@@ -23,7 +23,7 @@ def computers():
 
     # Load data into a DataFrame
     df = pd.DataFrame(data)
-    print(data)
-    print(df)
+
+    return df
 
 sys.modules[__name__] = computers
