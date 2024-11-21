@@ -5,3 +5,4 @@ lib/
 pyvenv.cfg
 .env
 temp.txt
+certs/

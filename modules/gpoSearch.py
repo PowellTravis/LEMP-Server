@@ -1,10 +1,12 @@
-from ldap3 import Server, Connection, ALL, ALL_ATTRIBUTES
+from ldap3 import Server, Connection, ALL, ALL_ATTRIBUTES, Tls, AUTO_BIND_NO_TLS
 import re
+import ssl
 import pandas as pd
 from dotenv import load_dotenv
 import os
 import sys
-from smb.SMBConnection import SMBConnection
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 load_dotenv()
 
@@ -16,7 +18,8 @@ def gpoSearch():
     returned_data = ""
 
     # Set up server and connection
-    server = Server('ldap://powellnetworks.net', get_info=ALL)
+    tls = Tls(validate=0,version=ssl.PROTOCOL_TLSv1_2)
+    server = Server(os.getenv('ad_server'), get_info=ALL, use_ssl=True, tls=tls)
     conn = Connection(server, user, password, auto_bind=True)
 
     conn.search(
@@ -48,36 +51,17 @@ def gpoSearch():
                         gpo_data.append(conn.entries[0].entry_attributes_as_dict)
 
                 df = pd.DataFrame(gpo_data)
-                # print(df.apply(lambda row: str(row["gPCFileSysPath"]), axis=1))
+                # print(df.to_string())
                 for ind in df.index:
-                    path = rf"{df['gPCFileSysPath'][ind][0]}"
-                    path = path.replace('\\', '/').split('/powellnetworks.net/P')[1]
-                    print(path)
-                    sconn = SMBConnection(ad_un, password, 'AD-Ansible', 'powellnetworks.net', domain='POWELLNETWORKS', use_ntlm_v2=True, is_direct_tcp=True)
-                    assert sconn.connect('powellnetworks.net', 445)
-                    try:
-                        with open("GPO.cmt", "wb") as local_file:
-                            sconn.retrieveFile('SysVol', '/powellnetworks.net/P' + path + "/GPO.cmt", local_file)
-                        print("File downloaded successfully.")
-                        
-                        # Optionally, read the file content
-                        file_data = open("GPO.cmt", 'r')
-                        if 'updateDay' in file_data.read():
-                            returned_data = file_data.read()
-                            print(file_data.read())
-                            break
-                        file_data.close()
-                        os.remove("GPO.cmt")
-                    except Exception as e:
-                        print("Error reading file")
-                    sconn.close()
-                break
+                    print(rf"{df['displayName'][ind][0]}")
+                    print(rf"{df['distinguishedName'][ind][0]}")
+                    # path = rf"{df['name'][ind][0]}"
+                #     path = path.replace('\\', '/').split('/powellnetworks.net/P')[1]
+                #     print(path)
+                # break
     else:
         print("No GPOs linked to this OU.")
     print(returned_data)
-    if(returned_data != ""):
-        return returned_data
-    else:
-        return None
+    return returned_data
 
 sys.modules[__name__] = gpoSearch
