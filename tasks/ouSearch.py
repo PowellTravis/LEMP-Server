@@ -1,9 +1,6 @@
 from modules import gpoSearch
 from modules import computers
-from ldap3 import Server, Connection, ALL, ALL_ATTRIBUTES, Tls, AUTO_BIND_NO_TLS
 import mysql.connector
-import ssl
-import pandas as pd
 from dotenv import load_dotenv
 import os
 import sys
@@ -11,8 +8,6 @@ import sys
 load_dotenv()
 
 def ouSearch():
-    user = os.getenv("ad_dn")
-    password = os.getenv("ad_pw")
 
     # Initiate MYSQL connection
     mysqlDB = mysql.connector.connect(
