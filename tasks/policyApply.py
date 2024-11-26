@@ -20,4 +20,10 @@ def policyApply(dn, linuxCommand):
     mysql_cursor.execute(query)
     dnsResults = mysql_cursor.fetchall()
     
+    for system in dnsResults:
+        
+    
+    mysql_cursor.close()
+    mysqlDB.close()
+    
 sys.modules[__name__] = policyApply
