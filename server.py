@@ -1,4 +1,4 @@
-from tasks import ouSearch, groupPolicyAutoSchedule
+from tasks import ouSearch, groupPolicyAutoSchedule, reachable
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 import time
