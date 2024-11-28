@@ -1,4 +1,4 @@
-from tasks import ouSearch, groupPolicyAutoSchedule
+from tasks import ouSearch, groupPolicyAutoSchedule, reachable
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 import time
@@ -23,14 +23,21 @@ oudQuery = "Select valueField from ServerSettings WHERE settingName='ou_discover
 mysql_cursor.execute(oudQuery)
 oudResults = mysql_cursor.fetchone()[0]
 
-scheduler.add_job(ouSearch, CronTrigger.from_crontab(oudResults), id='ou_discovery_interval')
+scheduler.add_job(ouSearch, CronTrigger.from_crontab(oudResults), args={}, id='ou_discovery_interval')
 
 gpasdQuery = "Select valueField from ServerSettings WHERE settingName='gp_auto_schedule_deploy'"
 mysql_cursor.execute(gpasdQuery)
 gpasdResults = mysql_cursor.fetchone()[0]
 mysql_cursor.close()
 mysqlDB.close()
-scheduler.add_job(groupPolicyAutoSchedule, CronTrigger.from_crontab(oudResults), args={scheduler}, id='gp_auto_schedule_deploy')
+scheduler.add_job(groupPolicyAutoSchedule, CronTrigger.from_crontab(gpasdResults), args={scheduler}, id='gp_auto_schedule_deploy')
+
+gpasdQuery = "Select valueField from ServerSettings WHERE settingName='reachable_job'"
+mysql_cursor.execute(gpasdQuery)
+reachableResults = mysql_cursor.fetchone()[0]
+mysql_cursor.close()
+mysqlDB.close()
+scheduler.add_job(reachable, CronTrigger.from_crontab(reachableResults), args={}, id='reachable_job')
 
 scheduler.start()
 
