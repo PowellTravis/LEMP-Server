@@ -30,7 +30,7 @@ def computers(search):
     conn = Connection(server, user, password, auto_bind=True)
     
     # Finds all computers in AD OU. Removes the Windows systems by filtering for linux systems.
-    conn.search(search, '((objectClass=computer))', attributes=ALL_ATTRIBUTES)
+    conn.search(search, '(objectClass=computer)', attributes=ALL_ATTRIBUTES)
 
     # Extract attributes for each entry
     data = []
