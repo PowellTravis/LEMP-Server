@@ -22,12 +22,13 @@ mysql_cursor = mysqlDB.cursor()
 oudQuery = "Select valueField from ServerSettings WHERE settingName='ou_discovery_interval'"
 mysql_cursor.execute(oudQuery)
 oudResults = mysql_cursor.fetchone()[0]
-
+print("OU Search Scheduled")
 scheduler.add_job(ouSearch, CronTrigger.from_crontab(oudResults), args={}, id='ou_discovery_interval')
 
 gpasdQuery = "Select valueField from ServerSettings WHERE settingName='gp_auto_schedule_deploy'"
 mysql_cursor.execute(gpasdQuery)
 gpasdResults = mysql_cursor.fetchone()[0]
+print("GP Search Scheduled")
 scheduler.add_job(groupPolicyAutoSchedule, CronTrigger.from_crontab(gpasdResults), args={scheduler}, id='gp_auto_schedule_deploy')
 
 gpasdQuery = "Select valueField from ServerSettings WHERE settingName='reachable_job'"
@@ -35,6 +36,7 @@ mysql_cursor.execute(gpasdQuery)
 reachableResults = mysql_cursor.fetchone()[0]
 mysql_cursor.close()
 mysqlDB.close()
+print("Reachable Search Scheduled")
 scheduler.add_job(reachable, CronTrigger.from_crontab(reachableResults), args={}, id='reachable_job')
 
 scheduler.start()
