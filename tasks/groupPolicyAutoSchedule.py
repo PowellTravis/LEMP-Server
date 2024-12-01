@@ -1,7 +1,5 @@
 import sys
 
-load_dotenv()
-
 def groupPolicyAutoSchedule(scheduler):
     from modules import add_job_if_not_exists
     import policyApply

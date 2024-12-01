@@ -1,14 +1,13 @@
-from modules import gpoSearch
-from modules import computers
-import mysql.connector
-from dotenv import load_dotenv
-import os
 import sys
 
-load_dotenv()
-
 def ouSearch():
+    from modules import gpoSearch
+    from modules import computers
+    import mysql.connector
+    from dotenv import load_dotenv
+    import os
 
+    load_dotenv()
     # Initiate MYSQL connection
     mysqlDB = mysql.connector.connect(
         host = os.getenv("mysql_host"),
